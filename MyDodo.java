@@ -14,6 +14,8 @@ public class MyDodo extends Dodo
     
     public int lastX = 0, lastY = 0, x = 0, y = 0, preSplitX = 0, preSplitY = 0, firstXAfterSplit = 0, firstYAfterSplit = 0;
     
+    public int freeSpacesY  = 0;
+    
     boolean[] fences = new boolean[4];
     
     
@@ -262,7 +264,9 @@ public class MyDodo extends Dodo
     
     public void mazeNoDead(){
         List<int[]> route = buildRoute();
+        
         int index = 0;
+        
         while(!onNest()){
            int[] target = route.get(index);
            say("target:" + "x:" + target[0] + " y:" + target[1]);
@@ -443,23 +447,23 @@ public class MyDodo extends Dodo
                 boolean fwdFree = false;
                 
                 while(fwdFree == false && foundNest == false){
-                        int[] test = new int[2];
+                    int[] test = new int[2];
                         
-                        test = getNode();
+                    test = getNode();
                         
-                        if (!firstStep){
-                            firstXAfterSplit = x;
-                            firstYAfterSplit = y;
-                            firstStep = true;
-                        }
+                    if (!firstStep){
+                        firstXAfterSplit = x;
+                        firstYAfterSplit = y;
+                        firstStep = true;
+                    }
                         
-                        if (test != null){
-                            tempRoute.add(test);
-                            say("added to temp" + test[0] + "," + test[1]);
-                        } else {
-                            say("null");
-                            fwdFree = true;
-                        }
+                    if (test != null){
+                        tempRoute.add(test);
+                        say("added to temp" + test[0] + "," + test[1]);
+                    } else {
+                        say("null");
+                        fwdFree = true;
+                    }
                 }
                 
                 if (foundNest){
@@ -469,8 +473,10 @@ public class MyDodo extends Dodo
                     }
                 } else {
                     say("back to split");
+                    
                     x = splitCoords[0];
                     y = splitCoords[1];
+                    
                     System.out.println(x + "," + y);
 
                     lastX = firstXAfterSplit;
@@ -497,44 +503,44 @@ public class MyDodo extends Dodo
         World world = getWorld();
         
         if (world.getObjectsAt(x + 1, y, Fence.class).size() < 1 && lastX != x + 1 && (preSplitX != x + 1 || preSplitY != y) && fences[1] == false ){
-                int[] validCoords = {x, y};
-                say(x + "," + y);
-                lastX = x;
-                lastY = y;
-                x++; 
-                return validCoords;
-            } else if (world.getObjectsAt(x, y - 1, Fence.class).size() < 1 && lastY != y - 1 &&( preSplitY != y -1 || preSplitX != x) && fences[2] == false){
-                int[] validCoords  = {x, y};
-                say(x + "," + y);
-                lastX = x;
-                lastY = y;
-                y--;
-                return validCoords;
-            } else if (world.getObjectsAt(x - 1, y, Fence.class).size() < 1 && lastX != x - 1 && (preSplitX != x -1 || preSplitY != y) && fences[3] == false){
-                int[] validCoords  = {x, y};
-                say(x + "," + y);
-                lastX = x;
-                lastY = y;
-                x--;
-                return validCoords;
-            } else if (world.getObjectsAt(x, y + 1, Fence.class).size() < 1 && lastY != y + 1 && (preSplitY != y + 1 || preSplitX != x) && fences[0] == false){
-                int[] validCoords  = {x, y};
-                say(x + "," + y);
-                lastX = x;
-                lastY = y;
-                y++;
-                return validCoords;
-            } else if (world.getObjectsAt(x, y, Nest.class).size() > 0) {
-                int[] validCoords  = {x, y};
-                say(x + "," + y);
-                lastX = x;
-                lastY = y;
-                foundNest = true;
-                return validCoords;
-            } else {                
-                say("null");
-                return null;
-            }
+            int[] validCoords = {x, y};
+            say(x + "," + y);
+            lastX = x;
+            lastY = y;
+            x++; 
+            return validCoords;
+        } else if (world.getObjectsAt(x, y - 1, Fence.class).size() < 1 && lastY != y - 1 &&( preSplitY != y -1 || preSplitX != x) && fences[2] == false){
+            int[] validCoords  = {x, y};
+            say(x + "," + y);
+            lastX = x;
+            lastY = y;
+            y--;
+            return validCoords;
+        } else if (world.getObjectsAt(x - 1, y, Fence.class).size() < 1 && lastX != x - 1 && (preSplitX != x -1 || preSplitY != y) && fences[3] == false){
+            int[] validCoords  = {x, y};
+            say(x + "," + y);
+            lastX = x;
+            lastY = y;
+            x--;
+            return validCoords;
+        } else if (world.getObjectsAt(x, y + 1, Fence.class).size() < 1 && lastY != y + 1 && (preSplitY != y + 1 || preSplitX != x) && fences[0] == false){
+            int[] validCoords  = {x, y};
+            say(x + "," + y);
+            lastX = x;
+            lastY = y;
+            y++;
+            return validCoords;
+        } else if (world.getObjectsAt(x, y, Nest.class).size() > 0) {
+            int[] validCoords  = {x, y};
+            say(x + "," + y);
+            lastX = x;
+            lastY = y;
+            foundNest = true;
+            return validCoords;
+        } else {                
+            say("null");
+            return null;
+        }
     }
     
     public List<Fence> checkAround(){
@@ -575,6 +581,13 @@ public class MyDodo extends Dodo
         
         if (world.getObjectsAt(x, y - 1, Fence.class).size() > 0){
             around.add(world.getObjectsAt(x, y - 1, Fence.class).get(0));
+            
+            freeSpacesY++;
+            
+            if (world.getObjectsAt(x,y -1, Fence.class).get(0) == null){
+                freeSpacesY++;
+            }
+            
             fences[2] = true;
         } else if (y - 1 == lastY && x == lastX || y - 1 == preSplitY && preSplitX == x){
             around.add(new Fence());
