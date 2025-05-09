@@ -1,0 +1,12 @@
+#BlueJ class context
+comment0.target=Egg
+comment0.text=\r\n\ \r\n\ @author\ Sjaak\ Smetsers\ &\ Renske\ Smetsers-Weeda\r\n\ @version\ 3.0\ --\ 01-01-2017\r\n
+comment1.params=value
+comment1.target=Egg(int)
+comment2.params=
+comment2.target=int\ getValue()
+comment3.params=newValue
+comment3.target=void\ setValue(int)
+comment4.params=x\ y
+comment4.target=void\ setLocation(int,\ int)
+numComments=5

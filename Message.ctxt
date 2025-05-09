@@ -1,0 +1,18 @@
+#BlueJ class context
+comment0.target=Message
+comment0.text=\r\n\ Message\ is\ used\ to\ show\ a\ message\ dialog.\r\n\ \r\n\ @author\ Sjaak\ Smetsers\ &\ Renske\ Smetsers-Weeda\r\n\ @version\ 3.0\ --\ 01-01-2017\r\n
+comment1.params=
+comment1.target=void\ act()
+comment2.params=world
+comment2.target=boolean\ messageActive(greenfoot.World)
+comment3.params=message_text\ box_color\ icon
+comment3.target=Message(java.lang.String,\ greenfoot.Color,\ java.lang.String)
+comment4.params=x\ y\ w\ h\ bw\ image\ color
+comment4.target=void\ drawBox(int,\ int,\ int,\ int,\ int,\ greenfoot.GreenfootImage,\ greenfoot.Color)
+comment5.params=text\ x\ y\ maxw\ image\ color
+comment5.target=void\ drawText(java.lang.String,\ int,\ int,\ int,\ greenfoot.GreenfootImage,\ greenfoot.Color)
+comment6.params=name\ wx\ y\ image
+comment6.target=void\ drawPicture(java.lang.String,\ int,\ int,\ greenfoot.GreenfootImage)
+comment7.params=message\ world
+comment7.target=void\ showMessage(Message,\ greenfoot.World)
+numComments=8

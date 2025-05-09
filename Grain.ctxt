@@ -1,0 +1,6 @@
+#BlueJ class context
+comment0.target=Grain
+comment0.text=\r\n\ \r\n\ @author\ Sjaak\ Smetsers\ &\ Renske\ Smetsers-Weeda\r\n\ @version\ 3.0\ --\ 01-01-2017\r\n
+comment1.params=x\ y
+comment1.target=void\ setLocation(int,\ int)
+numComments=2

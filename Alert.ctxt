@@ -1,0 +1,6 @@
+#BlueJ class context
+comment0.target=Alert
+comment0.text=\r\n\ Alert\ can\ be\ used\ to\ display\ an\ alert\ message.\r\n\ \r\n\ @author\ Sjaak\ Smetsers\ &\ Renske\ Smetsers-Weeda\r\n\ @version\ 2.0\ --\ 08-08-2015\r\n
+comment1.params=message_text
+comment1.target=Alert(java.lang.String)
+numComments=2

@@ -1,0 +1,6 @@
+#BlueJ class context
+comment0.target=Compliment
+comment0.text=\r\n\ Compliment\ can\ be\ used\ to\ congratulate\ sb.\r\n\ \r\n\ @author\ Sjaak\ Smetsers\ &\ Renske\ Smetsers-Weeda\r\n\ @version\ 2.0\ --\ 08-08-2015\r\n
+comment1.params=message_text
+comment1.target=Compliment(java.lang.String)
+numComments=2
