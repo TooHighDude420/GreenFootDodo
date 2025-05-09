@@ -384,62 +384,206 @@ public class MyDodo extends Dodo
     
     //build route
     public List<int[]> buildRoute(){
-        List<int[]> route = new ArrayList<int[]>();
+        List<int[]> route = new ArrayList();
         
-        return null;
+        foundNest = false;
+        
+        int[] splitCoords = new int[2];
+        
+        boolean split = false;
+        
+        World world = getWorld();
+        
+        x = getX();
+        y = getY();
+        lastX = getX();
+        lastY = getY();
+        
+        if (getX() + 1 > 10 && world.getObjectsAt(x - 1, y, Fence.class).size() < 1 ){
+            x = getX() - 1;
+        } else if (getX() + 1 < 10 && world.getObjectsAt(x + 1, y, Fence.class).size() < 1) {
+            x = getX() + 1;
+        } else {
+            x = getX();
+        }
+        
+        if (getY() + 1 > 10 && world.getObjectsAt(x, y - 1, Fence.class).size() < 1 ){
+            y = getY() - 1;
+        } else if (getY() + 1 < 10 && world.getObjectsAt(x, y + 1, Fence.class).size() < 1 ){
+            y = getY() + 1;
+        } else {
+            y = getY();
+        }
+                
+        while (foundNest == false){
+            if (checkAround().size() < 3){
+                List<int[]> tempRoute = new ArrayList();
+                
+                split = true;
+                
+                splitCoords[0] = x;
+                splitCoords[1] = y;
+                
+                if (x == lastX){
+                    preSplitX = x;
+                } else if ( x < lastX){
+                    preSplitX = x + 1;
+                } else if ( x > lastX){
+                    preSplitX = x - 1;
+                }
+                
+                if (y == lastY){
+                    preSplitY = y;
+                } else if ( y < lastY){
+                    preSplitY = y + 1;
+                } else if ( y > lastY){
+                    preSplitY = y - 1;
+                }
+                
+                boolean fwdFree = false;
+                
+                while(fwdFree == false && foundNest == false){
+                        int[] test = new int[2];
+                        
+                        test = getNode();
+                        
+                        if (!firstStep){
+                            firstXAfterSplit = x;
+                            firstYAfterSplit = y;
+                            firstStep = true;
+                        }
+                        
+                        if (test != null){
+                            tempRoute.add(test);
+                            say("added to temp" + test[0] + "," + test[1]);
+                        } else {
+                            say("null");
+                            fwdFree = true;
+                        }
+                }
+                
+                if (foundNest){
+                    for (int i = 0; i < tempRoute.size(); i++){
+                        say("building Route...");
+                        route.add(tempRoute.get(i));
+                    }
+                } else {
+                    say("back to split");
+                    x = splitCoords[0];
+                    y = splitCoords[1];
+                    System.out.println(x + "," + y);
+
+                    lastX = firstXAfterSplit;
+                    lastY = firstYAfterSplit;
+                    
+                    firstXAfterSplit = 0;
+                    firstYAfterSplit = 0;
+                    
+                    firstStep = false;
+                    
+                    System.out.println("last:" + lastX + "," + lastY);
+                }
+            }
+            
+            if (foundNest == false){
+                route.add(getNode());
+            }
+        }
+        
+        return route;
     }
     //sub for routeBuilder
-    public int[] getNode(World world){
-        return null;
+    public int[] getNode(){
+        World world = getWorld();
+        
+        if (world.getObjectsAt(x + 1, y, Fence.class).size() < 1 && lastX != x + 1 && (preSplitX != x + 1 || preSplitY != y) && fences[1] == false ){
+                int[] validCoords = {x, y};
+                say(x + "," + y);
+                lastX = x;
+                lastY = y;
+                x++; 
+                return validCoords;
+            } else if (world.getObjectsAt(x, y - 1, Fence.class).size() < 1 && lastY != y - 1 &&( preSplitY != y -1 || preSplitX != x) && fences[2] == false){
+                int[] validCoords  = {x, y};
+                say(x + "," + y);
+                lastX = x;
+                lastY = y;
+                y--;
+                return validCoords;
+            } else if (world.getObjectsAt(x - 1, y, Fence.class).size() < 1 && lastX != x - 1 && (preSplitX != x -1 || preSplitY != y) && fences[3] == false){
+                int[] validCoords  = {x, y};
+                say(x + "," + y);
+                lastX = x;
+                lastY = y;
+                x--;
+                return validCoords;
+            } else if (world.getObjectsAt(x, y + 1, Fence.class).size() < 1 && lastY != y + 1 && (preSplitY != y + 1 || preSplitX != x) && fences[0] == false){
+                int[] validCoords  = {x, y};
+                say(x + "," + y);
+                lastX = x;
+                lastY = y;
+                y++;
+                return validCoords;
+            } else if (world.getObjectsAt(x, y, Nest.class).size() > 0) {
+                int[] validCoords  = {x, y};
+                say(x + "," + y);
+                lastX = x;
+                lastY = y;
+                foundNest = true;
+                return validCoords;
+            } else {                
+                say("null");
+                return null;
+            }
     }
     
     public List<Fence> checkAround(){
-       World world = getWorld();
-       
-       List<Fence> around = new ArrayList();
+        World world = getWorld();
+        
+        List<Fence> around = new ArrayList();
     
-       if (world.getObjectsAt(x + 1, y, Fence.class).size() > 0){
-           around.add(world.getObjectsAt(x + 1, y, Fence.class).get(0));
-           fences[1] = true;
-           say("fence east");
-       } else if (x + 1 == lastX && y == lastY || x + 1 == preSplitX && y == preSplitY){
-           around.add(new Fence());
-           fences[1] = true;
-       } else {
-           fences[1] = false;
-       }
+        if (world.getObjectsAt(x + 1, y, Fence.class).size() > 0){
+            around.add(world.getObjectsAt(x + 1, y, Fence.class).get(0));
+            fences[1] = true;
+            say("fence east");
+        } else if (x + 1 == lastX && y == lastY || x + 1 == preSplitX && y == preSplitY){
+            around.add(new Fence());
+            fences[1] = true;
+        } else {
+            fences[1] = false;
+        }
         
-       if (world.getObjectsAt(x, y + 1, Fence.class).size() > 0){
-           around.add(world.getObjectsAt(x, y + 1, Fence.class).get(0));
-           fences[0] = true;
-       } else if (y + 1 == lastY && lastX == x || y + 1 == preSplitY && preSplitX == x){
-           around.add(new Fence());
-           fences[0] = true;
-       } else {
-           fences[0] = false;
-       }
+        if (world.getObjectsAt(x, y + 1, Fence.class).size() > 0){
+            around.add(world.getObjectsAt(x, y + 1, Fence.class).get(0));
+            fences[0] = true;
+        } else if (y + 1 == lastY && lastX == x || y + 1 == preSplitY && preSplitX == x){
+            around.add(new Fence());
+            fences[0] = true;
+        } else {
+            fences[0] = false;
+        }
         
-       if (world.getObjectsAt(x - 1, y, Fence.class).size() > 0){
-           around.add(world.getObjectsAt(x - 1, y, Fence.class).get(0));
-           fences[3] = true;
-       } else if (x - 1 == lastX && y == lastY || x - 1 == preSplitX && preSplitY == y){
-           around.add(new Fence());
-           fences[3] = true;
-       } else {
-           fences[3] = false;
-       }
+        if (world.getObjectsAt(x - 1, y, Fence.class).size() > 0){
+            around.add(world.getObjectsAt(x - 1, y, Fence.class).get(0));
+            fences[3] = true;
+        } else if (x - 1 == lastX && y == lastY || x - 1 == preSplitX && preSplitY == y){
+            around.add(new Fence());
+            fences[3] = true;
+        } else {
+            fences[3] = false;
+        }
         
-       if (world.getObjectsAt(x, y - 1, Fence.class).size() > 0){
-           around.add(world.getObjectsAt(x, y - 1, Fence.class).get(0));
-           fences[2] = true;
-       } else if (y - 1 == lastY && x == lastX || y - 1 == preSplitY && preSplitX == x){
-           around.add(new Fence());
-           fences[2] = true;
-       } else {
-           fences[2] = false;
-       }
+        if (world.getObjectsAt(x, y - 1, Fence.class).size() > 0){
+            around.add(world.getObjectsAt(x, y - 1, Fence.class).get(0));
+            fences[2] = true;
+        } else if (y - 1 == lastY && x == lastX || y - 1 == preSplitY && preSplitX == x){
+            around.add(new Fence());
+            fences[2] = true;
+        } else {
+            fences[2] = false;
+        }
         
-       return around;
+        return around;
     }
     
     //qol functions
